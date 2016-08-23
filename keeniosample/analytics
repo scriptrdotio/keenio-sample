@@ -1,0 +1,74 @@
+var keenioclient = require("keenio/keenioclient");
+
+var keenio = new keenioclient.Keenio("YOUR_KEENIO_PROJECTKEY");
+
+var COLLECTION = "satisfaction_survey";
+
+function addRating(rating, location) {
+  
+  var event = {
+    rating:Number(rating),
+    location: location
+  };
+  
+  return keenio.recordEvent({data:event, collection:COLLECTION});
+}
+
+function countResults(location) {
+  
+  var analyses = keenio.createAnalyses();  
+  var params = {    
+    event_collection: COLLECTION,
+    timeframe: "this_1_year",
+    group_by: "rating",
+    filters:  ["location == " + location]
+  };
+              
+  var results = analyses.count(params);
+  return results;
+}
+
+function getRatingsAverage() {
+  
+  var analyses = keenio.createAnalyses();  
+  var params = {    
+    event_collection: COLLECTION,
+    timeframe: "this_1_year",
+    target_property: "rating",
+    group_by: "location"
+  };
+  
+  return analyses.average(params).result;   
+}
+
+function getWorseVenue() {
+ 
+  var ratings = getRatingsAverage();
+  var min = 2;
+  var worseVenue = "";
+  for (var i = 0; i < ratings.length; i++) {
+    
+    if (ratings[i].result < min) {
+      
+      min = ratings[i].result;
+      worseVenue = ratings[i].location;
+    } 
+  }
+  return worseVenue;
+}
+
+function getBestVenue() {
+  
+  var ratings = getRatingsAverage();
+  var max = 0;
+  var bestVenue = "";
+  for (var i = 0; i < ratings.length; i++) {
+    
+    if (ratings[i].result > max) {
+      
+      max = ratings[i].result;
+      bestVenue = ratings[i].location;
+    } 
+  }
+  return bestVenue;
+}

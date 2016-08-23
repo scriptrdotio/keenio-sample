@@ -1,0 +1,18 @@
+var analytics = require("../analytics");
+
+var rating = request.body ? request.body.rating : request.parameters.rating;
+var location = request.body ? request.body.location : request.parameters.location;
+
+try {
+  
+  if (!rating || !location) {
+    throw {
+      "errorCode": "Missing_Parameter",
+      "errorDetail": "You need to send a rating and a location (either as parameters or as properties of a JSON body)"
+    }
+  }
+
+return analytics.addRating(Number(rating), location);
+}catch(exception){
+  return exception;
+}

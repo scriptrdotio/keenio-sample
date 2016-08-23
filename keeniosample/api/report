@@ -1,0 +1,40 @@
+var analytics = require("../analytics");
+
+var venues = [
+  analytics.countResults("venue1").result,
+  analytics.countResults("venue2").result,
+  analytics.countResults("venue3").result
+];
+
+var rows = [];
+for (var i = 0; i < venues.length; i++) {
+  
+  var venue = venues[i];
+  var zero = 0;
+  var one = 0;
+  var two = 0;
+  for (var j = 0; j < venue.length; j++) {
+    
+    switch("" + venue[j].rating) {
+        
+      case "0": zero = venue[j].result;break;
+      case "1": one = venue[j].result;break;
+      case "2": two = venue[j].result;break;
+    }
+  }
+  
+  var row = {"c":[{"v":"Venue" +  (i+1)}, {"v": zero},{"v": one},{"v": two}]};
+  rows.push(row);
+}
+
+var data = {
+  "cols":[
+    {"id":"","label":"Venue","pattern":"","type":"string"},
+    {"id":"","label":"Bad","pattern":"","type":"number"},
+    {"id":"","label":"Average","pattern":"","type":"number"},
+    {"id":"","label":"Good","pattern":"","type":"number"}
+  ],
+  "rows":rows
+} 
+
+return data;

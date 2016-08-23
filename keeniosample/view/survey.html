@@ -1,0 +1,75 @@
+<html>  
+    <head>
+      <title>Survey</title>
+      <script>
+        
+        var addRatingUrl = "https://iotdemos.scriptrapps.io/keeniosample/api/addRating";
+        function sendRating(event) {
+          
+          var linkId = event.target.id;
+          var rating = -1;
+          switch(linkId) {
+              
+            case "good": rating = 2; break;
+            case "average": rating = 1; break;
+            case "bad": rating = 0; break;
+          }
+          
+          var select = document.getElementById("venueSelect");
+          var venue = select.value;
+          var xhr = new XMLHttpRequest();
+          xhr.open("POST", addRatingUrl);
+          xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+          var content = "rating=" +  rating + "&location=" + venue;
+          xhr.send(content);
+          xhr.onload = function() {
+           
+            var responseJson = JSON.parse(xhr.responseText)
+            if (responseJson.response.metadata && responseJson.response.metadata.status == "success") {
+              
+              alert("Thank you for rating this venue !");
+              loadCharts();
+            }else {
+              
+              alert("An error occurred. Please try again");
+              console.log(responseJson);
+            }
+          }
+
+          xhr.onerror = function(error) {
+            
+            alert("An error occurred. Please try again");
+            console.log(response);
+          }
+        }
+        
+        function loadCharts() {
+          window.frames["dashboardFrame"].src = "https://iotdemos.scriptrapps.io/keeniosample/view/charts";
+        }
+        
+        function refreshCharts() {
+          
+          // refresh the dashboard every minute
+          setInterval(loadCharts, 60000);
+        }
+      </script>
+    </head>
+    <body onload="refreshCharts();">
+        <div id="venue" style="margin-bottom:10px">
+          Venue 
+          <select id="venueSelect">
+            <option value="venue1">Venue1</option>
+            <option value="venue2">Venue2</option>
+            <option value="venue3">Venue3</option>
+          </select>
+      	</div>
+      	<div>
+          <img id="good" onclick="sendRating(event);return false;" src="http://engelsk.arbejdstilsynet.dk/~/media/at/at/03-tilsyn/smiley-ordning/green_smiley_130%20gif.ashx" alt="good" style="cursor:pointer"/>
+          <img id="average" href="#" onclick="sendRating(event);return false;" src="http://engelsk.arbejdstilsynet.dk/~/media/at/at/03-tilsyn/smiley-ordning/yellow_smiley_130%20gif.ashx" alt="average" style="cursor:pointer" />
+          <img id="bad" href="#" onclick="sendRating(event);return false;" src="http://engelsk.arbejdstilsynet.dk/~/media/at/at/03-tilsyn/smiley-ordning/red_smiley_130%20gif.ashx" alt="bad" style="cursor:pointer"/>
+      	</div>
+      	<div>
+        	<iframe id="dashboardFrame" width="620px" height="450px" src="https://iotdemos.scriptrapps.io/keeniosample/view/charts" frameborder="0"></iframe>
+      </div>
+	</body>
+</html>

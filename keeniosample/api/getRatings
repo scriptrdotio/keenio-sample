@@ -1,0 +1,17 @@
+var analytics = require("../analytics");
+
+try {
+  
+  var location = request.parameters.location;
+
+  if (!location) {
+    throw {
+      "errorCode": "Missing_Parameter",
+      "errorDetail": "You need to pass a location"
+    }
+  }
+  
+  return analytics.countResults(location);	
+}catch(exception){
+  return exception;
+}
