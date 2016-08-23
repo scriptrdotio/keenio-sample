@@ -15,7 +15,7 @@ The implemented scenario is as follows: From an HTML page, end users can select 
 - api/getBestVenue: API script that uses "analytics" to return the venue that has the highest ratings
 - api/getWorseVenue: API script that uses "analytics" to return the venue that has the lowest ratings
 - api/report: API script that uses "analytics" to return the ratings of all venues
-- view/survey.html: very simple HTML used as a User Interface (entry point)
+- view/survey.html: very basic HTML page used as a User Interface (entry point)
 - view/charts: scriptr.io chart script used by the former HTML page to display the ratings
 
 # Dependencies
